@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import Image from 'next/image';
 import {
   motion,
   useMotionValue,
@@ -143,7 +144,7 @@ const RollingGallery = ({
                 }deg) translateZ(${radius}px)`,
               }}
             >
-              <img src={url} alt="gallery" className="gallery-img" />
+              <Image src={url} alt="gallery" className="gallery-img" />
             </div>
           ))}
         </motion.div>
