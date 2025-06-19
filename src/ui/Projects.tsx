@@ -10,7 +10,7 @@ import { MdOpenInNew } from "react-icons/md";
 import SkeletonUI2 from "./SkeletonUI2";
 
 // Import local JSON
-import projectData from "@/data/newData.json";
+import projectData from "../../public/newData.json";
 
 export function Projects() {
   const [data, setData] = useState<any[] | null>(null);

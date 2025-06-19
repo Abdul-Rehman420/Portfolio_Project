@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import ProjectPage from "./projectPage";
-import data from "../../../data/newData.json";
+import data from "../../../../public/newData.json";
 
 // ✅ TypeScript type definition
 type Project = {

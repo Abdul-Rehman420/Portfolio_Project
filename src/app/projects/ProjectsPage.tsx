@@ -7,7 +7,6 @@ import Link from "next/link";
 import { FaGithub } from "react-icons/fa6";
 import { HiViewGridAdd } from "react-icons/hi";
 import { MdOpenInNew } from "react-icons/md";
-
 import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
 import Meteors from "@/components/ui/meteors";
 import ScrollProgress from "@/components/ui/scroll-progress";
@@ -15,19 +14,15 @@ import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { NumberTicker } from "@/components/ui/number-ticker";
 
-async function fetchLocalProjects() {
-  const res = await fetch("../../data/newData.json");
-  if (!res.ok) {
-    throw new Error("Failed to fetch project data");
-  }
-  return res.json();
-}
+// Directly import your JSON data (adjust path as needed)
+import projectData from "@/../public/newData.json";
 
 function Project() {
+  // Using useQuery with static data (no fetching needed)
   const { data, isLoading } = useQuery({
     queryKey: ["projects"],
-    queryFn: fetchLocalProjects,
-    staleTime: 60000,
+    queryFn: () => Promise.resolve(projectData), // Immediately resolve with imported data
+    staleTime: Infinity // Data never goes stale
   });
 
   return (
@@ -76,20 +71,14 @@ function Project() {
                     <p className="mt-4 text-xs font-semibold leading-tight">
                       #{post.category.toLowerCase()}
                     </p>
-                    <p
-                      className="mt-4 text-base font-semibold"
-                      title={post.title}
-                    >
+                    <p className="mt-4 text-base font-semibold" title={post.title}>
                       {post.title.length > 40
-                        ? post.title.substring(0, 38) + "..."
+                        ? `${post.title.substring(0, 38)}...`
                         : post.title}
                     </p>
-                    <p
-                      className="mt-2 text-sm leading-normal"
-                      title={post.details}
-                    >
+                    <p className="mt-2 text-sm leading-normal" title={post.details}>
                       {post.details.length > 150
-                        ? post.details.substring(0, 150) + "..."
+                        ? `${post.details.substring(0, 150)}...`
                         : post.details}
                     </p>
 
@@ -110,11 +99,7 @@ function Project() {
                         </span>
                       </div>
 
-                      <Link
-                        href={post.sourceCode}
-                        target="_blank"
-                        className="transition-all duration-300 opacity-0 group-hover:opacity-100 group-hover:translate-y-0"
-                      >
+                      <Link href={post.sourceCode} target="_blank" className="transition-all duration-300 opacity-0 group-hover:opacity-100 group-hover:translate-y-0">
                         <HoverBorderGradient
                           containerClassName="rounded-lg"
                           as="button"
@@ -125,11 +110,7 @@ function Project() {
                       </Link>
 
                       {post.liveLink && (
-                        <Link
-                          href={post.liveLink}
-                          target="_blank"
-                          className="transition-all duration-300 opacity-0 group-hover:opacity-100 group-hover:translate-y-0"
-                        >
+                        <Link href={post.liveLink} target="_blank" className="transition-all duration-300 opacity-0 group-hover:opacity-100 group-hover:translate-y-0">
                           <HoverBorderGradient
                             containerClassName="rounded-lg"
                             as="button"
@@ -140,10 +121,7 @@ function Project() {
                         </Link>
                       )}
 
-                      <Link
-                        href={`/project/${post._id}`}
-                        className="transition-all duration-300 opacity-0 group-hover:opacity-100 group-hover:translate-y-0"
-                      >
+                      <Link href={`/project/${post._id}`} className="transition-all duration-300 opacity-0 group-hover:opacity-100 group-hover:translate-y-0">
                         <HoverBorderGradient
                           containerClassName="rounded-lg"
                           as="button"
