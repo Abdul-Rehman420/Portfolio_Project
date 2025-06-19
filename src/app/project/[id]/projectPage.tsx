@@ -8,7 +8,7 @@ import { IoIosArrowBack } from "react-icons/io";
 import { MdOpenInNew } from "react-icons/md";
 import parse from "html-react-parser";
 import { useState, useCallback } from "react";
-import YouTube from 'react-youtube';
+import YouTube from "react-youtube";
 
 type Project = {
   id: string;
@@ -38,32 +38,33 @@ const ProjectPage = ({ project }: ProjectPageProps) => {
 
   const handleClick = () => router.back();
 
-  // Memoized YouTube ID extractor
   const getYouTubeId = useCallback((url: string) => {
     const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
     const match = url.match(regExp);
-    return (match && match[2].length === 11) ? match[2] : null;
+    return match && match[2].length === 11 ? match[2] : null;
   }, []);
 
-  // Check if URL is YouTube
-  const isYouTubeUrl = useCallback((url: string) => {
-    return url.includes('youtube.com') || url.includes('youtu.be');
-  }, []);
+  const isYouTubeUrl = useCallback(
+    (url: string) => url.includes("youtube.com") || url.includes("youtu.be"),
+    []
+  );
 
-  // Normalize media items
-  const mediaItems = project.slideshowImages?.length 
-    ? project.slideshowImages 
+  const mediaItems = project.slideshowImages?.length
+    ? project.slideshowImages
     : [project.image];
 
-  // Navigation handlers
   const nextSlide = useCallback(() => {
     setIsVideoPlaying(false);
-    setCurrentSlide((prev) => (prev === mediaItems.length - 1 ? 0 : prev + 1));
+    setCurrentSlide((prev) =>
+      prev === mediaItems.length - 1 ? 0 : prev + 1
+    );
   }, [mediaItems.length]);
 
   const prevSlide = useCallback(() => {
     setIsVideoPlaying(false);
-    setCurrentSlide((prev) => (prev === 0 ? mediaItems.length - 1 : prev - 1));
+    setCurrentSlide((prev) =>
+      prev === 0 ? mediaItems.length - 1 : prev - 1
+    );
   }, [mediaItems.length]);
 
   const goToSlide = useCallback((index: number) => {
@@ -75,16 +76,17 @@ const ProjectPage = ({ project }: ProjectPageProps) => {
     setIsVideoPlaying(true);
   }, []);
 
-  // YouTube player options
   const youtubeOpts = {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
     playerVars: {
       autoplay: isVideoPlaying ? 1 : 0,
       modestbranding: 1,
-      rel: 0, // Don't show related videos at the end
+      rel: 0,
     },
   };
+
+  const currentMedia = mediaItems[currentSlide] || "";
 
   return (
     <div className="p-8 max-w-7xl mx-auto mt-28 mb-10 dark:bg-[#020617] bg-slate-100 rounded-xl border-[1px] dark:border-slate-500/10 border-slate-500/5">
@@ -103,10 +105,10 @@ const ProjectPage = ({ project }: ProjectPageProps) => {
       {/* Media Slider */}
       <div className="bg-blue-100 w-full h-full rounded-lg drop-shadow-md overflow-hidden relative">
         <div className="relative w-full h-full aspect-video">
-          {isYouTubeUrl(mediaItems[currentSlide]) ? (
+          {isYouTubeUrl(currentMedia) ? (
             <div className="w-full h-full">
               <YouTube
-                videoId={getYouTubeId(mediaItems[currentSlide] || '')}
+                videoId={getYouTubeId(currentMedia || "") || undefined}
                 opts={youtubeOpts}
                 onPlay={onVideoPlay}
                 className="w-full h-full aspect-video"
@@ -115,7 +117,7 @@ const ProjectPage = ({ project }: ProjectPageProps) => {
             </div>
           ) : (
             <Image
-              src={mediaItems[currentSlide].trim()}
+              src={currentMedia.trim() || "/fallback.jpg"}
               width={1080}
               height={720}
               alt={`${project.title} - ${currentSlide + 1}`}
@@ -127,14 +129,14 @@ const ProjectPage = ({ project }: ProjectPageProps) => {
           {/* Navigation Controls */}
           {mediaItems.length > 1 && (
             <>
-              <button 
+              <button
                 onClick={prevSlide}
                 className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/30 text-white p-2 rounded-full hover:bg-black/50 z-10 transition-all"
                 aria-label="Previous slide"
               >
                 <IoIosArrowBack />
               </button>
-              <button 
+              <button
                 onClick={nextSlide}
                 className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/30 text-white p-2 rounded-full hover:bg-black/50 rotate-180 z-10 transition-all"
                 aria-label="Next slide"
@@ -142,19 +144,21 @@ const ProjectPage = ({ project }: ProjectPageProps) => {
                 <IoIosArrowBack />
               </button>
 
-              {/* Slide Indicators */}
               <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2">
                 {mediaItems.map((_, index) => (
                   <button
                     key={index}
                     onClick={() => goToSlide(index)}
-                    className={`w-3 h-3 rounded-full transition-all ${currentSlide === index ? 'bg-white w-6' : 'bg-white/50 hover:bg-white/70'}`}
+                    className={`w-3 h-3 rounded-full transition-all ${
+                      currentSlide === index
+                        ? "bg-white w-6"
+                        : "bg-white/50 hover:bg-white/70"
+                    }`}
                     aria-label={`Go to slide ${index + 1}`}
                   />
                 ))}
               </div>
 
-              {/* Slide Counter */}
               <div className="absolute bottom-4 right-4 bg-black/70 text-white px-3 py-1 rounded-full text-sm">
                 {currentSlide + 1}/{mediaItems.length}
               </div>
@@ -169,15 +173,16 @@ const ProjectPage = ({ project }: ProjectPageProps) => {
           #{project.category}
         </span>
         <h2 className="lg:text-3xl text-xl font-bold mt-5">{project.title}</h2>
-        <p className="mt-2 lg:max-w-5xl lg:text-base text-sm">{project.details}</p>
-        
+        <p className="mt-2 lg:max-w-5xl lg:text-base text-sm">
+          {project.details}
+        </p>
+
         {project.longDetails && (
           <div className="mt-4 prose dark:prose-invert max-w-none">
             {parse(project.longDetails)}
           </div>
         )}
 
-        {/* Tags */}
         {project.tags.length > 0 && (
           <div className="flex mt-4">
             <div className="flex space-x-2 mt-2 flex-wrap items-center">
@@ -215,38 +220,50 @@ const ProjectPage = ({ project }: ProjectPageProps) => {
 
         {/* Action Buttons */}
         <div className="flex items-center mt-6 gap-x-5 flex-wrap gap-y-3">
-          <a href={project.sourceCode} target="_blank" rel="noopener noreferrer">
+          <a
+            href={project.sourceCode}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <HoverBorderGradient
               containerClassName="rounded-lg"
               as="button"
               className="dark:bg-slate-800 bg-slate-100 text-slate-700 dark:text-slate-100 flex items-center space-x-2 px-4 py-2"
             >
-              <FaGithub className="font-extrabold text-lg mr-2" /> 
+              <FaGithub className="font-extrabold text-lg mr-2" />
               <span>Github</span>
             </HoverBorderGradient>
           </a>
 
           {project.backendSourceCode && (
-            <a href={project.backendSourceCode} target="_blank" rel="noopener noreferrer">
+            <a
+              href={project.backendSourceCode}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <HoverBorderGradient
                 containerClassName="rounded-lg"
                 as="button"
                 className="dark:bg-slate-800 bg-slate-100 text-slate-700 dark:text-slate-100 flex items-center space-x-2 px-4 py-2"
               >
-                <FaGithub className="font-extrabold text-lg mr-2" /> 
+                <FaGithub className="font-extrabold text-lg mr-2" />
                 <span>Backend</span>
               </HoverBorderGradient>
             </a>
           )}
 
           {project.liveLink && (
-            <a href={project.liveLink} target="_blank" rel="noopener noreferrer">
+            <a
+              href={project.liveLink}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <HoverBorderGradient
                 containerClassName="rounded-lg"
                 as="button"
                 className="dark:bg-indigo-500 bg-indigo-500 text-slate-100 dark:text-slate-100 flex items-center space-x-2 px-4 py-2"
               >
-                <MdOpenInNew className="font-extrabold text-lg mr-2" /> 
+                <MdOpenInNew className="font-extrabold text-lg mr-2" />
                 <span>Live Demo</span>
               </HoverBorderGradient>
             </a>
@@ -258,13 +275,3 @@ const ProjectPage = ({ project }: ProjectPageProps) => {
 };
 
 export default ProjectPage;
-
-
-
-
-
-
-
-
-
-
