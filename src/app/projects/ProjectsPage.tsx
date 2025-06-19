@@ -36,13 +36,13 @@ function Project() {
           </p>
           <hr />
           <p className="lg:max-w-4xl text-base md:text-xl mt-8 mb-2">
-            Here is some kind of{" "}
-            <NumberTicker
-              value={data?.project?.length || 0}
-              className="whitespace-pre-wrap text-base md:text-xl font-medium tracking-tighter text-black dark:text-white"
-            />{" "}
-            project's I have finished.
-          </p>
+           Here is some kind of{" "}
+          <NumberTicker
+          value={data?.project?.length || 0}
+          className="whitespace-pre-wrap text-base md:text-xl font-medium tracking-tighter text-black dark:text-white"
+          />{" "}
+          project&apos;s I have finished.
+         </p>
         </div>
 
         {isLoading ? (
