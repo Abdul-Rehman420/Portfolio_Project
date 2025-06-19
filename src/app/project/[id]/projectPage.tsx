@@ -106,7 +106,7 @@ const ProjectPage = ({ project }: ProjectPageProps) => {
           {isYouTubeUrl(mediaItems[currentSlide]) ? (
             <div className="w-full h-full">
               <YouTube
-                videoId={getYouTubeId(mediaItems[currentSlide])}
+                videoId={getYouTubeId(mediaItems[currentSlide] || '')}
                 opts={youtubeOpts}
                 onPlay={onVideoPlay}
                 className="w-full h-full aspect-video"

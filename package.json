@@ -36,6 +36,7 @@
     "date-fns": "^4.1.0",
     "embla-carousel-react": "^8.0.0-rc19",
     "framer-motion": "^11.18.2",
+    "get-youtube-id": "^1.0.1",
     "html-react-parser": "^5.2.2",
     "lucide-react": "^0.312.0",
     "motion": "^11.18.2",
